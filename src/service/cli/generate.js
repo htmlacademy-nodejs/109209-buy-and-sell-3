@@ -5,6 +5,8 @@ const {
   shuffle
 } = require(`../../utils`);
 const fs = require(`fs`);
+const chalk = require(`chalk`);
+const {promisify} = require(`util`);
 
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
@@ -72,17 +74,17 @@ const generateOffers = (count) => (
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     const content = JSON.stringify(generateOffers(countOffer));
+    const writeFile = promisify(fs.writeFile);
 
-    fs.writeFile(FILE_NAME, content, (err) => {
-      if (err) {
-        return console.error(`Can't write data to file...`);
-      }
-
-      return console.info(`Operation success. File created.`);
-    });
+    try {
+      await writeFile(FILE_NAME, content);
+      console.info(chalk.green(`Operation success. File created.`));
+    } catch (e) {
+      console.error(chalk.red(`Can't write data to file...`));
+    }
   }
 };
