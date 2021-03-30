@@ -1,4 +1,7 @@
 'use strict';
+const fsPromises = require(`fs`).promises;
+const path = require(`path`);
+const chalk = require(`chalk`);
 
 module.exports.getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -13,4 +16,15 @@ module.exports.shuffle = (someArray) => {
   }
 
   return someArray;
+};
+
+module.exports.getContent = async (name) => {
+  const pathFile = path.resolve(path.join(`data`, `${name}.txt`));
+
+  try {
+    const data = await fsPromises.readFile(pathFile, `utf8`);
+    return data.split(`\n`).filter((item) => item !== ``);
+  } catch (e) {
+    return console.error(chalk.red(e));
+  }
 };
