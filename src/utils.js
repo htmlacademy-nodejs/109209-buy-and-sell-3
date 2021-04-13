@@ -19,7 +19,7 @@ module.exports.shuffle = (someArray) => {
 };
 
 module.exports.getContent = async (name) => {
-  const pathFile = path.resolve(path.join(`data`, `${name}.txt`));
+  const pathFile = path.resolve(path.join(__dirname, `..`, `data`, `${name}.txt`));
 
   try {
     const data = await fsPromises.readFile(pathFile, `utf8`);
